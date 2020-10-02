@@ -1,1 +1,176 @@
-console.log('hello');
+// each sorting algo will take in a list, and return every step necessary in order to sort that list using specific algo
+// for ex
+// [2,1,3] -> [[2,1,3],[1,2,3]]
+// [3,4,2,1] -> [[3,2,4,1],[3,2,1,4],[2,3,1,4],[2,1,3,4],[1,2,3,4]]
+// this way, the visualization part of the program will be able to easily display each step of the way
+
+Array.prototype.insert = function (num, ind) {
+	// returns new list with num inserted at index, ind
+	let beforeSlice = this.slice(0, ind);
+	let afterSlice = this.slice(ind, this.length);
+
+	let returnArray = [];
+	beforeSlice.forEach(
+		number => returnArray.push(number)
+	);
+	returnArray.push(num);
+	afterSlice.forEach(
+		number => returnArray.push(number)
+	);
+	return returnArray;
+}
+
+Array.prototype.max = function () {
+	// returns biggest number in list
+	let biggest = this[0];
+	let i;
+	for (i = 0; i < this.length; i++) {
+		if (this[i] > biggest) {
+			biggest = this[i];
+		}
+	}
+	return biggest;
+}
+
+function generateList(min, max, n) {
+	let arr = [];
+	min = Math.round(min);
+	max = Math.round(max);
+	for (let i = 0; i < n; i++) {
+		let num = Math.floor(Math.random() * max) + min;
+		arr.push(num);
+	}
+	return arr;
+}
+
+function selectionSort(list) {
+	let i, j;
+	let listHistory = [list.slice()];
+
+	for (i = 0; i < list.length; i++) {
+		let ind = i;
+		for (j = i + 1; j < list.length; j++) {
+			if (list[j] < list[ind]) {
+				ind = j;
+			}
+		}
+		let num = list[ind];
+		list.splice(ind, 1);
+		list = list.insert(num, i);
+		listHistory.push(list.slice());
+	}
+	return listHistory;
+}
+
+class SortVisualizer {
+	constructor() {
+		this.canvasEle = document.getElementById('canv');
+		this.canv = this.canvasEle.getContext('2d');
+
+		this.index = 0;
+	}
+
+	init(history) {
+		this.width = 900;
+		this.height = 500;
+
+		this.history = history;
+		this.starting = history[0];
+		this.totalSteps = history.length;
+		this.listLength = history[0].length;
+
+		this.barWidth = this.width / this.listLength;
+		this.yMax = this.getBiggestValue();
+		this.drawStep()
+	}
+
+	getBiggestValue() {
+		let biggest = 0;
+		let i;
+		for (i = 0; i < this.history.length; i++) {
+			let max = this.history[i].max();
+			if (max > biggest) {
+				biggest = max;
+			}
+		}
+		return biggest;
+	}
+
+	drawBar(x1, y1, barWidth, barHeight) {
+		let width = barWidth - (barWidth * .15);
+		x1 += (barWidth * .075);
+		if (y1 == 0) {
+			y1 = barHeight * .025;
+		}
+		this.canv.beginPath();
+		this.canv.rect(x1, y1, width, barHeight);
+		this.canv.fillStyle = 'darkblue';
+		this.canv.fill();
+	}
+
+	drawStep() {
+		this.canv.clearRect(0, 0, this.width, this.height);
+		let step = this.history[this.index];
+
+		for (let i = 0; i < step.length; i++) {
+			let ratio = step[i] / this.yMax;
+			let y = this.height - (ratio * this.height);
+			let h = this.height - y;
+			let x = (i * this.barWidth);
+			let w = this.barWidth;
+
+			this.drawBar(x, y, w, h);
+
+		}
+	}
+}
+
+let sortObject;
+let intervalVar;
+// sortObject = new SortVisualizer();
+// sortObject.init([
+// 	[1, 3, 4, 22, 3, 1, 5, 1, 3, 6, 7, 2, 3],
+// 	[1, 3, 4, 22, 3, 10, 5, 1, 3, 6, 7, 2, 3],
+// ]);
+
+function generateSortObject() {
+	let max = document.getElementById('max').value;
+	let n = document.getElementById('n').value;
+	let randomArr = generateList(1, max, n);
+	let arrHistory = selectionSort(randomArr);
+	sortObject = new SortVisualizer();
+	sortObject.init(arrHistory);
+}
+
+function moveForwardAnimation() {
+	if (sortObject.index == sortObject.history.length - 1) {
+		clearInterval(intervalVar);
+		return;
+	}
+	sortObject.index++;
+	sortObject.drawStep();
+}
+
+function playAnimation() {
+	sortObject.index = 0;
+	intervalVar = setInterval(moveForwardAnimation, 125);
+}
+
+
+function moveForward() {
+	if (sortObject.index == sortObject.history.length - 1) {
+		return;
+	} else {
+		sortObject.index++;
+	}
+	sortObject.drawStep();
+}
+
+function moveBackward() {
+	if (sortObject.index == 0) {
+		return;
+	} else {
+		sortObject.index--;
+	}
+	sortObject.drawStep();
+}

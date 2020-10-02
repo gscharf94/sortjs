@@ -1,0 +1,38 @@
+canvas {
+	background-color: black;
+}
+
+html {
+	background-color: rgb(95, 95, 95);
+}
+
+button {
+	background-color: darkblue;
+	color: white;
+	border-radius: 20%;
+	border-color: black;
+	box-shadow: 5px 5px 5px 1px black;
+}
+
+button:focus {
+	outline: none;
+}
+
+input {
+	background-color: black;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	width: 7ch;
+}
+
+select {
+	background-color: black;
+	color: white;
+	font-weight: bold;
+}
+
+label {
+	font-weight: bold;
+	font-size: large;
+}
