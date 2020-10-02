@@ -62,6 +62,31 @@ function selectionSort(list) {
 	return listHistory;
 }
 
+function bubbleSort(arr) {
+	let history = [];
+	let i = 0;
+	let c = 0;
+	while (true) {
+		if (i > arr.length + 1) {
+			if (c == 0) {
+				break;
+			} else {
+				i = 0;
+				c = 0;
+			}
+		}
+		if (arr[i] > arr[i + 1]) {
+			let num = arr[i + 1];
+			arr.splice(i + 1, 1);
+			arr = arr.insert(num, i);
+			history.push(arr.slice())
+			c++;
+		}
+		i++;
+	}
+	return history;
+}
+
 class SortVisualizer {
 	constructor() {
 		this.canvasEle = document.getElementById('canv');
@@ -127,17 +152,22 @@ class SortVisualizer {
 
 let sortObject;
 let intervalVar;
-// sortObject = new SortVisualizer();
-// sortObject.init([
-// 	[1, 3, 4, 22, 3, 1, 5, 1, 3, 6, 7, 2, 3],
-// 	[1, 3, 4, 22, 3, 10, 5, 1, 3, 6, 7, 2, 3],
-// ]);
 
 function generateSortObject() {
 	let max = document.getElementById('max').value;
 	let n = document.getElementById('n').value;
 	let randomArr = generateList(1, max, n);
-	let arrHistory = selectionSort(randomArr);
+
+	let arrHistory;
+	switch (document.getElementById('sorts').value) {
+		case 'selectionSort':
+			arrHistory = selectionSort(randomArr);
+			break;
+		case 'bubbleSort':
+			arrHistory = bubbleSort(randomArr);
+			break;
+	}
+
 	sortObject = new SortVisualizer();
 	sortObject.init(arrHistory);
 }
@@ -153,7 +183,7 @@ function moveForwardAnimation() {
 
 function playAnimation() {
 	sortObject.index = 0;
-	intervalVar = setInterval(moveForwardAnimation, 125);
+	intervalVar = setInterval(moveForwardAnimation, 75);
 }
 
 
