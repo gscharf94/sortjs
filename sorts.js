@@ -43,27 +43,45 @@ function generateList(min, max, n) {
 	return arr;
 }
 
-function selectionSort(list) {
+function selectionSort(arr) {
 	let i, j;
-	let listHistory = [list.slice()];
+	let history = [arr.slice()];
 
-	for (i = 0; i < list.length; i++) {
+	for (i = 0; i < arr.length; i++) {
 		let ind = i;
-		for (j = i + 1; j < list.length; j++) {
-			if (list[j] < list[ind]) {
+		for (j = i + 1; j < arr.length; j++) {
+			if (arr[j] < arr[ind]) {
 				ind = j;
 			}
 		}
-		let num = list[ind];
-		list.splice(ind, 1);
-		list = list.insert(num, i);
-		listHistory.push(list.slice());
+		let num = arr[ind];
+		arr.splice(ind, 1);
+		arr = arr.insert(num, i);
+		history.push(arr.slice());
 	}
-	return listHistory;
+	return history;
+}
+
+function insertionSort(arr) {
+	let history = [arr.slice()];
+
+	for (let i = 1; i < arr.length; i++) {
+		for (let j = 0; j < i; j++) {
+			if (arr[i] < arr[j]) {
+				let num = arr[i];
+				arr.splice(i, 1);
+				arr = arr.insert(num, j);
+				history.push(arr.slice());
+				break;
+			}
+		}
+	}
+
+	return history;
 }
 
 function bubbleSort(arr) {
-	let history = [];
+	let history = [arr.slice()];
 	let i = 0;
 	let c = 0;
 	while (true) {
@@ -165,6 +183,9 @@ function generateSortObject() {
 			break;
 		case 'bubbleSort':
 			arrHistory = bubbleSort(randomArr);
+			break;
+		case 'insertionSort':
+			arrHistory = insertionSort(randomArr);
 			break;
 	}
 
