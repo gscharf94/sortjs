@@ -80,6 +80,135 @@ function insertionSort(arr) {
 	return history;
 }
 
+function mergeSort(arr) {
+	let history = [];
+	let oArr = [...arr];
+	let tmpHistory = [];
+
+	function merge(arr, mp, side) {
+		if (arr.length > 1) {
+			let midpoint = Math.ceil(arr.length / 2);
+			let leftHalf = arr.slice(0, midpoint);
+			let rightHalf = arr.slice(midpoint, );
+
+
+			merge(leftHalf, midpoint, 'left');
+			merge(rightHalf, midpoint, 'right');
+
+			let [i, j, k] = [0, 0, 0];
+			while (i < leftHalf.length && j < rightHalf.length) {
+				if (leftHalf[i] < rightHalf[j]) {
+					arr[k] = leftHalf[i];
+					i++;
+				} else {
+					arr[k] = rightHalf[j];
+					j++;
+				}
+				k++;
+			}
+
+			while (i < leftHalf.length) {
+				arr[k] = leftHalf[i];
+				i++;
+				k++;
+			}
+
+			while (j < rightHalf.length) {
+				arr[k] = rightHalf[j];
+				j++;
+				k++;
+			}
+		}
+
+		if (arr.length > 1) {
+			tmpHistory.push({
+				arr: arr,
+				mp: mp,
+				side: side,
+			});
+		}
+
+	}
+	merge(arr, false, false);
+
+	function generateHistory(tmp, oArr, sorted) {
+		let history = [oArr];
+
+		let mmp = Math.floor(tmp.length / 2);
+
+		for (let i = 0; i < tmp.length; i++) {
+			let side = tmp[i].side;
+			let tmpArr = tmp[i].arr.slice();
+			let mp = tmp[i].mp;
+
+			if (i < mmp) {
+				if (side == 'left') {
+					let rec = tmpArr.slice();
+					let split = oArr.slice(mp, );
+					for (let j = 0; j < split.length; j++) {
+						rec.push(split[j]);
+					}
+					history.push(rec);
+					oArr = rec.slice();
+				} else {
+					let rec = oArr.slice(0, mp);
+					for (let j = 0; j < tmpArr.length; j++) {
+						rec.push(tmpArr[j]);
+					}
+					let secondHalf = oArr.slice(mp + tmpArr.length, );
+					for (let j = 0; j < secondHalf.length; j++) {
+						rec.push(secondHalf[j]);
+					}
+					history.push(rec);
+					oArr = rec.slice();
+				}
+			} else {
+				if (side == 'left') {
+					let rec = oArr.slice(0, mmp + 1);
+					for (let j = 0; j < tmpArr.length; j++) {
+						rec.push(tmpArr[j]);
+					}
+					let secondHalf = oArr.slice(mmp + tmpArr.length + 1, );
+					for (let j = 0; j < secondHalf.length; j++) {
+						rec.push(secondHalf[j]);
+					}
+					history.push(rec);
+					oArr = rec.slice();
+				} else {
+					if (mp == false) {
+						history.push(tmpArr);
+					}
+					if (mp == Math.ceil(tmp.length / 2)) {
+						let rec = oArr.slice(0, mmp + 1);
+						for (let j = 0; j < tmpArr.length; j++) {
+							rec.push(tmpArr[j]);
+						}
+						history.push(rec);
+						oArr = rec.slice();
+						break;
+					}
+					let rec = oArr.slice(0, mmp + 1 + mp);
+					for (let j = 0; j < tmpArr.length; j++) {
+						rec.push(tmpArr[j]);
+					}
+					let secondHalf = oArr.slice(mmp + 1 + mp + tmpArr.length, );
+					for (let j = 0; j < secondHalf.length; j++) {
+						rec.push(secondHalf[j]);
+					}
+					history.push(rec);
+					oArr = rec.slice();
+				}
+			}
+		}
+
+		history.push(sorted);
+		console.log(history);
+		return history;
+	}
+	history = generateHistory(tmpHistory, oArr, arr);
+	return history;
+}
+
 function bubbleSort(arr) {
 	let history = [arr.slice()];
 	let i = 0;
@@ -155,6 +284,8 @@ class SortVisualizer {
 		this.canv.clearRect(0, 0, this.width, this.height);
 		let step = this.history[this.index];
 
+		console.log(step);
+
 		for (let i = 0; i < step.length; i++) {
 			let ratio = step[i] / this.yMax;
 			let y = this.height - (ratio * this.height);
@@ -186,6 +317,9 @@ function generateSortObject() {
 			break;
 		case 'insertionSort':
 			arrHistory = insertionSort(randomArr);
+			break;
+		case 'mergeSort':
+			arrHistory = mergeSort(randomArr);
 			break;
 	}
 
