@@ -202,10 +202,53 @@ function mergeSort(arr) {
 		}
 
 		history.push(sorted);
-		console.log(history);
 		return history;
 	}
 	history = generateHistory(tmpHistory, oArr, arr);
+	return history;
+}
+
+function cocktailSort(arr) {
+	let history = [];
+
+	let i = 0;
+	let c = 0;
+	let forward = true;
+	while (true) {
+		if (i == arr.length - 1 && forward) {
+			forward = false;
+			if (c == 0) {
+				break;
+			}
+			c = 0;
+		}
+		if (i == 0 && !forward) {
+			forward = true;
+			if (c == 0) {
+				break;
+			}
+			c = 0;
+		}
+		if (forward) {
+			if (arr[i] > arr[i + 1]) {
+				let num = arr[i + 1];
+				arr.splice(i + 1, 1);
+				arr = arr.insert(num, i);
+				history.push(arr.slice());
+				c++;
+			}
+			i++;
+		} else {
+			if (arr[i - 1] > arr[i]) {
+				let num = arr[i];
+				arr.splice(i, 1);
+				arr = arr.insert(num, i - 1);
+				history.push(arr.slice());
+				c++;
+			}
+			i--;
+		}
+	}
 	return history;
 }
 
@@ -284,8 +327,6 @@ class SortVisualizer {
 		this.canv.clearRect(0, 0, this.width, this.height);
 		let step = this.history[this.index];
 
-		console.log(step);
-
 		for (let i = 0; i < step.length; i++) {
 			let ratio = step[i] / this.yMax;
 			let y = this.height - (ratio * this.height);
@@ -320,6 +361,9 @@ function generateSortObject() {
 			break;
 		case 'mergeSort':
 			arrHistory = mergeSort(randomArr);
+			break;
+		case 'cocktailSort':
+			arrHistory = cocktailSort(randomArr);
 			break;
 	}
 
