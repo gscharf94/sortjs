@@ -13,7 +13,7 @@
 <body>
 	<div id="gridContainer">
 		<h1>Sorts</h1>
-		<canvas id="canv" width=900 height=500></canvas><br>
+		<canvas id="canv" width=900 height=400></canvas><br>
 
 		<label for="sorts">Sorts:</label>
 		<select name="sorts" id="sorts">
@@ -33,8 +33,17 @@
 		<button onclick="moveBackward()" id="previousButton">
 			<</button> <button onclick="moveForward()" id="nextButton">>
 		</button>
-		<button onclick="playAnimation()" id="playButton">Play</button>
+		<button onclick="playAnimation()" id="playButton">Play</button><br><br>
 
+		<canvas id="canv2" width=900 height=400></canvas><br>
+		<label for="sorts2">Sorts:</label>
+		<select name="sorts" id="sorts2">
+			<option value="selectionSort">Selection Sort</option>
+			<option value="bubbleSort">Bubble Sort</option>"
+			<option value="insertionSort">Insertion Sort</option>"
+			<option value="mergeSort">Merge Sort</option>"
+			<option value="cocktailSort">Cocktail Sort</option>"
+		</select>
 
 
 	</div>

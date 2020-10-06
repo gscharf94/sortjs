@@ -278,8 +278,8 @@ function bubbleSort(arr) {
 }
 
 class SortVisualizer {
-	constructor() {
-		this.canvasEle = document.getElementById('canv');
+	constructor(canvId) {
+		this.canvasEle = document.getElementById(canvId);
 		this.canv = this.canvasEle.getContext('2d');
 
 		this.index = 0;
@@ -287,7 +287,7 @@ class SortVisualizer {
 
 	init(history) {
 		this.width = 900;
-		this.height = 500;
+		this.height = 400;
 
 		this.history = history;
 		this.starting = history[0];
@@ -342,6 +342,7 @@ class SortVisualizer {
 
 let sortObject;
 let intervalVar;
+let intervalVar2;
 
 function generateSortObject() {
 	let max = document.getElementById('max').value;
@@ -367,8 +368,38 @@ function generateSortObject() {
 			break;
 	}
 
-	sortObject = new SortVisualizer();
+	let arrHistory2;
+	switch (document.getElementById('sorts2').value) {
+		case 'selectionSort':
+			arrHistory2 = selectionSort(randomArr);
+			break;
+		case 'bubbleSort':
+			arrHistory2 = bubbleSort(randomArr);
+			break;
+		case 'insertionSort':
+			arrHistory2 = insertionSort(randomArr);
+			break;
+		case 'mergeSort':
+			arrHistory2 = mergeSort(randomArr);
+			break;
+		case 'cocktailSort':
+			arrHistory2 = cocktailSort(randomArr);
+			break;
+	}
+
+	sortObject = new SortVisualizer('canv');
+	sortObject2 = new SortVisualizer('canv2');
 	sortObject.init(arrHistory);
+	sortObject2.init(arrHistory2);
+}
+
+function moveForwardAnimation2() {
+	if (sortObject2.index == sortObject2.history.length - 1) {
+		clearInterval(intervalVar2);
+		return;
+	}
+	sortObject2.index++;
+	sortObject2.drawStep();
 }
 
 function moveForwardAnimation() {
@@ -382,7 +413,9 @@ function moveForwardAnimation() {
 
 function playAnimation() {
 	sortObject.index = 0;
+	sortObject2.index = 0;
 	intervalVar = setInterval(moveForwardAnimation, 75);
+	intervalVar2 = setInterval(moveForwardAnimation2, 75);
 }
 
 
